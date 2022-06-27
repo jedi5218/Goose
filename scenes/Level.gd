@@ -1,6 +1,6 @@
 extends Spatial
 
-const SPEED = 1
+const SPEED = 2
 
 var camrot = 0.0
 var m = SpatialMaterial.new()
@@ -28,7 +28,7 @@ func _physics_process(delta):
 	
 
 	if path.size() > 0:
-		$Goose/Spatial/Animation.playback_speed = SPEED*3
+		$Goose/Spatial/Animation.playback_speed = SPEED 
 		# Direction is the difference between where we are now
 		# and where we want to go.
 		var destination = path[0]

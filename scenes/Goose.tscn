@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://assets/anims/goose_walk_loop.tres" type="Animation" id=1]
 [ext_resource path="res://assets/meshes/goose.tres" type="ArrayMesh" id=2]
+[ext_resource path="res://assets/meshes/selector_blob.tres" type="ArrayMesh" id=3]
 
 [node name="Goose" type="Spatial"]
 
@@ -9,12 +10,16 @@
 transform = Transform( -1, 8.74227e-08, 3.82137e-15, 0, -4.37114e-08, 1, 8.74227e-08, 0.999999, 4.37114e-08, 0, 0, 0 )
 
 [node name="Mesh" type="MeshInstance" parent="Spatial"]
-transform = Transform( 83.8539, 52.4797, 14.6424, -51.9348, 85.1143, -7.63821, -16.4713, -1.19954, 98.6269, -0.00431639, 0.0966764, 0.0260503 )
+transform = Transform( 79.7925, 58.3362, 15.167, -57.5964, 81.2112, -9.34856, -17.7709, -1.27623, 98.4, -0.00695295, 0.080067, -0.000413065 )
 mesh = ExtResource( 2 )
 skeleton = NodePath("../..")
 material/0 = null
 material/1 = null
 material/2 = null
+
+[node name="SelectorBlob" type="MeshInstance" parent="Spatial/Mesh"]
+mesh = ExtResource( 3 )
+material/0 = null
 
 [node name="Animation" type="AnimationPlayer" parent="Spatial"]
 root_node = NodePath("../..")
