@@ -1,0 +1,39 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type spatial;
+uniform vec4 base_color : hint_color;
+const float hex_side_len = 1./sqrt(3.);
+const mat2 rot60 = mat2(
+	vec2(cos(radians(60)),sin(radians(60))),
+	vec2(-sin(radians(60)),cos(radians(60))));
+
+bool hex_band(vec2 plain,float line_thick)
+{
+	float shift = mod(plain.y/hex_side_len+0.5,3)<1.5? -0.5:0.;
+	
+	bool x = abs(mod(plain.x+shift,1)-0.5) > (1.-line_thick)/2.;
+	bool y = mod((plain.y/hex_side_len)+0.5,1.5) < 1.;
+	return x&&y;
+}
+bool hex_edge(vec3 world_coord,float line_thick)
+{
+	vec2 plain = world_coord.xz;
+	vec2 plainb = plain*rot60;
+	vec2 plainc = plainb*rot60;
+	
+	
+	//return hex_band(plain);
+	//return hex_band(plain)||hex_band(plainb);
+	return hex_band(plain,line_thick)||hex_band(plainb,line_thick)||hex_band(plainc,line_thick);
+}
+void fragment()
+{
+	vec3 world_coord = (CAMERA_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	float lt = length(world_coord.xz)/1000.+0.03;
+	ALBEDO =hex_edge(world_coord,lt)? vec3(1):base_color.xyz;
+}"
+
+[resource]
+shader = SubResource( 1 )
+shader_param/base_color = Color( 0.223529, 0.258824, 0.298039, 1 )
