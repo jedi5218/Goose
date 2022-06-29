@@ -5,33 +5,90 @@ code = "shader_type spatial;
 uniform vec4 base_color : hint_color;
 const float hex_side_len = 1./sqrt(3.);
 const mat2 rot60 = mat2(
-	vec2(cos(radians(60)),sin(radians(60))),
-	vec2(-sin(radians(60)),cos(radians(60))));
+    vec2(cos(radians(60)),sin(radians(60))),
+    vec2(-sin(radians(60)),cos(radians(60)))
+    );
 
 bool hex_band(vec2 plain,float line_thick)
 {
-	float shift = mod(plain.y/hex_side_len+0.5,3)<1.5? -0.5:0.;
-	
-	bool x = abs(mod(plain.x+shift,1)-0.5) > (1.-line_thick)/2.;
-	bool y = mod((plain.y/hex_side_len)+0.5,1.5) < 1.;
-	return x&&y;
+    float shift = mod(plain.y/hex_side_len+0.5,3)<1.5? -0.5:0.;
+
+    bool x = abs(mod(plain.x+shift,1)-0.5) > (1.-line_thick)/2.;
+    bool y = mod((plain.y/hex_side_len)+0.5,1.5) < 1.;
+    return x&&y;
 }
+
+vec2 hex_coord(vec3 world_coord)//HexUtils.WorldToHex as a shader function
+{
+    vec2 loc = world_coord.xz;
+    float s = sign(loc.y);
+    loc.y = abs(loc.y);
+    loc.y /= hex_side_len;
+    loc.y += 0.5;
+    bool flip = false;
+    if(mod(loc.y,3) > 1.5)
+    {
+        loc.x+=0.5;
+        flip = true;
+    }
+    if(mod(loc.y,1.5) > 1.)
+    {
+        float yband = (mod((loc.y),1.5) - 1.)/0.5;
+        float xband = mod(loc.x+0.5,1.) * 2.;
+        if (xband > 1.)
+        {
+            if ((xband-1. + yband) > 1.)
+            {
+                loc.y += 1.;
+                if(!flip)
+                loc.x+=0.5;
+            }
+        }
+        else
+        {
+            if((xband+1.- yband) < 1.)
+            {
+                loc.y += 1.;
+                if(flip)
+                loc.x -=0.5;
+            }
+        }
+    }
+    loc.y /= 1.5;
+    loc.x = round(loc.x);
+    loc.y *= s;
+    return loc;
+}
+
 bool hex_edge(vec3 world_coord,float line_thick)
 {
-	vec2 plain = world_coord.xz;
-	vec2 plainb = plain*rot60;
-	vec2 plainc = plainb*rot60;
-	
-	
-	//return hex_band(plain);
-	//return hex_band(plain)||hex_band(plainb);
-	return hex_band(plain,line_thick)||hex_band(plainb,line_thick)||hex_band(plainc,line_thick);
+    vec2 plain = world_coord.xz;
+    vec2 plainb = plain*rot60;
+    vec2 plainc = plainb*rot60;
+    //return hex_band(plain);
+    //return hex_band(plain)||hex_band(plainb);
+    return hex_band(plain,line_thick)||hex_band(plainb,line_thick)||hex_band(plainc,line_thick);
 }
+const vec3 colors[] = {// color array for debug coords draw
+    vec3(236, 240, 241), //white
+    vec3(231, 0,0), //red
+    vec3(230, 100, 0),//orange
+    vec3(250, 250, 15),//yellow
+    vec3(0, 204, 0),//green
+    vec3(0, 0, 200),//dark blue
+    vec3(26, 188, 156),//light blue
+    vec3(250, 0, 250),//purple
+    vec3(2, 2, 2)//black
+};
 void fragment()
 {
-	vec3 world_coord = (CAMERA_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	float lt = length(world_coord.xz)/1000.+0.03;
-	ALBEDO =hex_edge(world_coord,lt)? vec3(1):base_color.xyz;
+    vec3 world_coord = (CAMERA_MATRIX * vec4(VERTEX, 1.0)).xyz;
+    float lt = length(world_coord.xz)/1000.+0.03;
+    //lt+=0.1;
+    //vec2 hexc = hex_coord(world_coord);
+    //vec3 color = colors[abs(int(hexc.y)) % 9]/255f;
+    //ALBEDO =hex_edge(world_coord,lt)? color:base_color.xyz;
+    ALBEDO =hex_edge(world_coord,lt)? vec3(1.):base_color.xyz;
 }"
 
 [resource]
