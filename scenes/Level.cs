@@ -15,12 +15,13 @@ public class Level : Spatial
     public override void _Ready()
     {
         robot = GetNode<Goose>("Goose");
-        camera = GetNode<Camera>("CameraBase/Camera");
-        SetProcessInput(true);
+        camera = GetNode<Camera>("Camera");
+        camera.Connect("Command", this, "Move");
         m.FlagsUnshaded = true;
         m.FlagsUsePointSize = true;
         m.AlbedoColor = Color.ColorN("white");
         robot.GetNode<AnimationPlayer>("Spatial/Animation").Play("goose_walk_loop");
+        
     }
 
     public override void _PhysicsProcess(float delta)
@@ -65,34 +66,20 @@ public class Level : Spatial
             }
         }
         else
-            robot.GetNode<AnimationPlayer>("Spatial/Animation")).PlaybackSpeed = 0;
+            robot.GetNode<AnimationPlayer>("Spatial/Animation").PlaybackSpeed = 0;
     }
-
-    public override void _UnhandledInput(InputEvent @event)
+    
+    public void Move(Vector3 to)
     {
-        if (@event is InputEventMouseButton btn && btn.ButtonIndex == (int)ButtonList.Left && @event.IsPressed())
-        {
-            var from = camera.ProjectRayOrigin(btn.Position);
-            var to = from + camera.ProjectRayNormal(btn.Position) * 1000;
-            var target_point = GetNode<Navigation>("Navigation").GetClosestPointToSegment(from, to);
-            GetNode<OccupiedHexMarker>("OccupiedHexMarker").PlaceMarker(target_point);
+        var target_point = GetNode<Navigation>("Navigation").GetClosestPoint(to);
+        GetNode<OccupiedHexMarker>("OccupiedHexMarker").PlaceMarker(target_point);
 
-            // Set the path between the robots current location and our target.
-            path = new Godot.Collections.Array<Vector3>(
-                GetNode<Navigation>("Navigation").GetSimplePath(robot.Translation, target_point, true));
+        // Set the path between the robots current location and our target.
+        path = new Godot.Collections.Array<Vector3>(
+            GetNode<Navigation>("Navigation").GetSimplePath(robot.Translation, target_point, true));
 
-            if (show_path)
-                DrawPath(path);
-        }
-        if (@event is InputEventMouseMotion mtn)
-        {
-            if ((mtn.ButtonMask & (int)(ButtonList.MaskMiddle | ButtonList.MaskRight)) != 0)
-            {
-                camrot += mtn.Relative.x * 0.005f;
-                GetNode<Spatial>("CameraBase").Rotation = new Vector3(0, camrot, 0);
-                GD.Print("Camera Rotation: ", camrot);
-            }
-        }
+        if (show_path)
+            DrawPath(path);
     }
 
     void DrawPath(Godot.Collections.Array<Vector3> path_array)

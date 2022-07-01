@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/Camera.cs" type="Script" id=1]
+
+[node name="CameraBase" type="Spatial"]
+transform = Transform( 1, 0, 0, 0, 0.919252, -0.393669, 0, 0.393669, 0.919252, 0, 0, -4.76837e-07 )
+script = ExtResource( 1 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.16057, 0.987025, 0, -0.987025, 0.16057, 0, 9, -3.85037e-08 )
+doppler_tracking = 1
+current = true
+far = 1000.0
+
+[node name="MinZoom" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.277247, 0.960799, 0, -0.960799, 0.277247, 0, 3.98304, 1.20509 )
+
+[node name="MaxZoom" type="Camera" parent="."]
+transform = Transform( 0.982235, 0.00861401, 0.187458, -0.172503, -0.351807, 0.920041, 0.0738743, -0.936033, -0.344071, 1.90735e-06, 44.6274, -17.6993 )
