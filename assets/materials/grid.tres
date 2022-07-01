@@ -4,6 +4,7 @@
 code = "shader_type spatial;
 uniform vec4 base_color : hint_color;
 const float hex_side_len = 1./sqrt(3.);
+const float hole_radius = 8f;
 const mat2 rot60 = mat2(
     vec2(cos(radians(60)),sin(radians(60))),
     vec2(-sin(radians(60)),cos(radians(60)))
@@ -88,7 +89,8 @@ void fragment()
     //vec2 hexc = hex_coord(world_coord);
     //vec3 color = colors[abs(int(hexc.y)) % 9]/255f;
     //ALBEDO =hex_edge(world_coord,lt)? color:base_color.xyz;
-    ALBEDO =hex_edge(world_coord,lt)? vec3(1.):base_color.xyz;
+    bool line = hex_edge(world_coord,lt) || length(world_coord) < hole_radius + 0.1;
+    ALBEDO = line? vec3(1.):base_color.xyz;
 }"
 
 [resource]
