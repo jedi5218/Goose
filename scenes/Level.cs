@@ -20,7 +20,7 @@ public class Level : Spatial
         m.FlagsUnshaded = true;
         m.FlagsUsePointSize = true;
         m.AlbedoColor = Color.ColorN("white");
-        ((AnimationPlayer)robot.GetNode("Spatial/Animation")).Play("goose_walk_loop");
+        robot.GetNode<AnimationPlayer>("Spatial/Animation").Play("goose_walk_loop");
     }
 
     public override void _PhysicsProcess(float delta)
@@ -32,7 +32,7 @@ public class Level : Spatial
 
         if (path != null && path.Count > 0)
         {
-            ((AnimationPlayer)robot.GetNode("Spatial/Animation")).PlaybackSpeed = SPEED;
+            robot.GetNode<AnimationPlayer>("Spatial/Animation").PlaybackSpeed = SPEED;
             // Direction is the difference between where we are now
             // and where we want to go.
             var destination = path[0];
@@ -65,7 +65,7 @@ public class Level : Spatial
             }
         }
         else
-            ((AnimationPlayer)robot.GetNode("Spatial/Animation")).PlaybackSpeed = 0;
+            robot.GetNode<AnimationPlayer>("Spatial/Animation")).PlaybackSpeed = 0;
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -74,8 +74,8 @@ public class Level : Spatial
         {
             var from = camera.ProjectRayOrigin(btn.Position);
             var to = from + camera.ProjectRayNormal(btn.Position) * 1000;
-            var target_point = ((Navigation)GetNode("Navigation")).GetClosestPointToSegment(from, to);
-            ((OccupiedHexMarker)GetNode("OccupiedHexMarker")).PlaceMarker(target_point);
+            var target_point = GetNode<Navigation>("Navigation").GetClosestPointToSegment(from, to);
+            GetNode<OccupiedHexMarker>("OccupiedHexMarker").PlaceMarker(target_point);
 
             // Set the path between the robots current location and our target.
             path = new Godot.Collections.Array<Vector3>(

@@ -24,6 +24,6 @@ public class OccupiedHexMarker : MeshInstance
         var t = Transform;
         t.origin = HexUtils.hex_to_world(hex);
         Transform = t;
-        ((Label)GetNode("Label")).Text = String.Format("coords: {0}:{1}", hex.x, hex.y);
+        GetNode<Label>("Label").Text = String.Format("coords: {0}:{1}", hex.x, hex.y);
     }
 }
