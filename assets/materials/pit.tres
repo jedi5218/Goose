@@ -1,4 +1,22 @@
-[gd_resource type="SpatialMaterial" format=2]
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type spatial;
+uniform vec4 base_color : hint_color;
+varying vec3 world_coord;
+void fragment()
+{
+    world_coord = (CAMERA_MATRIX * vec4(VERTEX, 1.0)).xyz;
+    float depth =1f - abs(world_coord.y)/400f;
+    ALBEDO = base_color.xyz * depth;
+}
+void light() {
+    float depth =1f - abs(world_coord.y)/30f;
+    depth = max(depth,0f);
+    depth *=2f;
+    DIFFUSE_LIGHT += clamp(dot(NORMAL, LIGHT), 0.0, 1.0) * ATTENUATION * ALBEDO * depth;
+}"
 
 [resource]
-albedo_color = Color( 0.223529, 0.258824, 0.298039, 1 )
+shader = SubResource( 1 )
+shader_param/base_color = Color( 0.223529, 0.258824, 0.298039, 1 )

@@ -12,8 +12,8 @@ doppler_tracking = 1
 current = true
 far = 1000.0
 
-[node name="MinZoom" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.277247, 0.960799, 0, -0.960799, 0.277247, 0, 3.98304, 1.20509 )
+[node name="MinZoom" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.277247, 0.960799, 0, -0.960799, 0.277247, 0, 4.38045, 2.13309 )
 
-[node name="MaxZoom" type="Camera" parent="."]
-transform = Transform( 0.982235, 0.00861401, 0.187458, -0.172503, -0.351807, 0.920041, 0.0738743, -0.936033, -0.344071, 1.90735e-06, 44.6274, -17.6993 )
+[node name="MaxZoom" type="Spatial" parent="."]
+transform = Transform( 0.982235, 0.00861401, 0.187458, -0.172503, -0.351807, 0.920041, 0.0738743, -0.936033, -0.344072, 1.90735e-06, 52.6423, 1.0161 )
