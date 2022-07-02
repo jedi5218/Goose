@@ -9,7 +9,7 @@ public class Goose : Spatial
     const float SPEED = 2;
     public override void _Ready()
     {
-        Transform = Transform.Translated(HexUtils.hex_to_world(new Vector2(0, -16)));
+        //Transform = Transform.Translated(HexUtils.hex_to_world(new Vector2(0, -16)));
         GetNode<AnimationPlayer>("Spatial/Animation").Play("goose_walk_loop");
     }
     //  // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -39,6 +39,7 @@ public class Goose : Spatial
             // Direction is the difference between where we are now
             // and where we want to go.
             var destination = path[0];
+            destination.y = 0;
             direction = destination - Translation;
             // If the next node is closer than we intend to 'step', then
             // take a smaller step. Otherwise we would go past it and

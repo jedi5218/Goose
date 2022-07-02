@@ -21,7 +21,7 @@ script = ExtResource( 4 )
 transform = Transform( -1, 8.74227e-08, 3.82137e-15, 0, -4.37114e-08, 1, 8.74227e-08, 0.999999, 4.37114e-08, 0, 0, 0 )
 
 [node name="Mesh" type="MeshInstance" parent="Spatial"]
-transform = Transform( 89.6257, -39.4901, -20.1934, 38.5244, 91.8724, -8.67982, 21.9798, -2.90573e-05, 97.5545, 6.46853e-09, 6.46853e-09, 0.00356112 )
+transform = Transform( 89.6257, -39.4901, -20.1934, 38.5244, 91.8724, -8.67982, 21.9798, -2.83122e-05, 97.5545, 6.46853e-09, 6.46853e-09, 0.00356112 )
 mesh = ExtResource( 2 )
 skeleton = NodePath("../..")
 material/0 = null
