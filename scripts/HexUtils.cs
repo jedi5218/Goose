@@ -56,6 +56,7 @@ public static class HexUtils
         }
         y /= 1.5;
         x = Math.Round(x);
+        y = Math.Floor(y);
         y *= s;
         return new Vector2((float)x, (float)y).Round();
 
