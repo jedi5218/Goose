@@ -20,7 +20,11 @@ public class OccupiedHexMarker : MeshInstance
 //  }
     public void PlaceMarker(Vector3 world_pos)
     {
+        world_pos.y = 0;
         Vector2 hex = HexUtils.world_to_hex(world_pos);
+        var tr = new Transform(Basis.Identity, world_pos);
+        tr.origin.y = 1;
+        GetNode<Spatial>("../Pin").Transform = tr;
         var t = Transform;
         t.origin = HexUtils.hex_to_world(hex);
         Transform = t;

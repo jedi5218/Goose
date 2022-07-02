@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://assets/materials/pit.tres" type="Material" id=1]
 [ext_resource path="res://assets/materials/grid.tres" type="Material" id=2]
@@ -19,11 +19,16 @@ background_mode = 2
 background_sky = SubResource( 4 )
 ambient_light_color = Color( 0.396078, 0.627451, 0.894118, 1 )
 
+[sub_resource type="CylinderMesh" id=8]
+top_radius = 0.317
+bottom_radius = 0.0
+radial_segments = 4
+
 [sub_resource type="CylinderMesh" id=6]
 material = ExtResource( 5 )
 top_radius = 0.5
 bottom_radius = 0.5
-height = 0.3
+height = 0.05
 radial_segments = 6
 rings = 0
 
@@ -96,9 +101,15 @@ environment = SubResource( 5 )
 
 [node name="Camera" parent="." instance=ExtResource( 7 )]
 
-[node name="Goose" parent="." instance=ExtResource( 4 )]
+[node name="Goose" parent="." groups=["Geese"] instance=ExtResource( 4 )]
 
 [node name="Draw" type="ImmediateGeometry" parent="."]
+
+[node name="Pin" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
+mesh = SubResource( 8 )
+skeleton = NodePath("../OccupiedHexMarker")
+material/0 = null
 
 [node name="OccupiedHexMarker" type="MeshInstance" parent="."]
 mesh = SubResource( 6 )
@@ -110,3 +121,37 @@ margin_right = 134.0
 margin_bottom = 29.0
 custom_styles/normal = SubResource( 7 )
 text = "hex coords:"
+
+[node name="Container" type="PanelContainer" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -274.0
+margin_top = 109.0
+margin_right = -104.0
+margin_bottom = 147.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Container"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 163.0
+margin_bottom = 31.0
+
+[node name="Label" type="Label" parent="Container/HBoxContainer"]
+margin_top = 5.0
+margin_right = 78.0
+margin_bottom = 19.0
+text = "goose count"
+
+[node name="SpinBox" type="SpinBox" parent="Container/HBoxContainer"]
+margin_left = 82.0
+margin_right = 156.0
+margin_bottom = 24.0
+min_value = 1.0
+max_value = 20.0
+value = 1.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Spatial" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3.03023, -1.19209e-07, -8.67968 )

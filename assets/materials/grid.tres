@@ -58,6 +58,7 @@ vec2 hex_coord(vec3 world_coord)//HexUtils.WorldToHex as a shader function
     loc.y /= 1.5;
     loc.x = round(loc.x);
     loc.y *= s;
+    loc.y = ceil(loc.y);
     return loc;
 }
 
@@ -81,16 +82,31 @@ const vec3 colors[] = {// color array for debug coords draw
     vec3(250, 0, 250),//purple
     vec3(2, 2, 2)//black
 };
+vec3 hex_to_world(vec2 cell)
+{
+    if (mod(abs(cell.y), 2) != 0f)
+        cell.x -= 0.5f;
+    cell.y *= hex_side_len;
+    cell.y *= 1.5;
+    return vec3(cell.x, 0f, cell.y);
+}
 void fragment()
 {
     vec3 world_coord = (CAMERA_MATRIX * vec4(VERTEX, 1.0)).xyz;
     float lt = length(world_coord.xz)/1000.+0.03;
-    //lt+=0.1;
-    //vec2 hexc = hex_coord(world_coord);
+    //lt=1f;
+    vec2 hexc = hex_coord(world_coord);
     //vec3 color = colors[abs(int(hexc.y)) % 9]/255f;
-    //ALBEDO =hex_edge(world_coord,lt)? color:base_color.xyz;
+    vec3 color = vec3(1);
+    color *= (abs(mod(cos(hexc.x*10f)+sin(hexc.y),4f))/4f)*0.7f + 0.3f;
     bool line = hex_edge(world_coord,lt) || length(world_coord) < hole_radius + 0.1;
-    ALBEDO = line? vec3(1.):base_color.xyz;
+    
+    bool hatch = (length(abs(hex_to_world(hexc))) < 8.1f);
+    //bool hatch = (length(hexc) < sin(TIME/2f)*5f+12fs);
+    //hatch = hatch && length(world_coord) < sin(TIME/2f)*5f+12fs;
+    float offset = mod(TIME,1)*3f*lt;
+    hatch = hatch && mod(length(world_coord)+offset,3f*lt) < lt;
+    ALBEDO = (line||hatch)? color:base_color.xyz;
 }"
 
 [resource]
